@@ -1,2 +1,2 @@
 # RangeSeekBar
-![](https://img.shields.io/badge/developer-10%25-brightgreen.svg)
+![](https://img.shields.io/badge/develop-10%25-brightgreen.svg)
