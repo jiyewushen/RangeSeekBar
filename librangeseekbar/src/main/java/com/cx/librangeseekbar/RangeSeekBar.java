@@ -31,6 +31,7 @@ public class RangeSeekBar extends ConstraintLayout {
 
     public interface OnSeekBarChangeListener {
         void onChanged(int start, int end);
+
         void onStop();
     }
 
@@ -69,21 +70,24 @@ public class RangeSeekBar extends ConstraintLayout {
         super(context, attrs, defStyleAttr);
         init(context);
     }
-    public void setLeftAndRight(int leftValue,int rightValue,int maxValue,Bitmap bitmap){
+
+    public void setLeftAndRight(int leftValue, int rightValue, int maxValue, Bitmap bitmap) {
         setMaxValue(maxValue);
-        setLeftAndRight(leftValue,rightValue,bitmap);
+        setLeftAndRight(leftValue, rightValue, bitmap);
     }
-    public void setLeftAndRight(int leftValue, int rightValue){
-        setLeftAndRight(leftValue,rightValue,null);
+
+    public void setLeftAndRight(int leftValue, int rightValue) {
+        setLeftAndRight(leftValue, rightValue, null);
     }
-    public void setLeftAndRight(int leftValue, int rightValue,Bitmap bitmap) {
+
+    public void setLeftAndRight(int leftValue, int rightValue, Bitmap bitmap) {
         if (leftValue < 0 || rightValue < 0 || rightValue > maxValue) return;
         if (leftValue != this.leftValue || rightValue != this.rightValue) {
             mSet.clone(this);
             mSet.connect(rightView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, (int) ((maxValue - rightValue) / percent));
             mSet.connect(leftView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, (int) (leftValue / percent));
             mSet.applyTo(this);
-            if (bitmap!=null)setBitmap(bitmap);
+            if (bitmap != null) setBitmap(bitmap);
             else setProgressBitmap();
         }
     }
@@ -91,13 +95,14 @@ public class RangeSeekBar extends ConstraintLayout {
     public void setBitmap(Bitmap bitmap) {
         if (bitmap == null) return;
         if (mBitmap != null && !mBitmap.isRecycled()) mBitmap.recycle();
-        if (mRect != null) mBitmap=Bitmap.createScaledBitmap(bitmap,mRect.width(),mRect.height(),false);
+        if (mRect != null)
+            mBitmap = Bitmap.createScaledBitmap(bitmap, mRect.width(), mRect.height(), false);
         setProgressBitmap();
     }
 
     public void setMaxValue(int maxValue) {
         this.maxValue = maxValue;
-        rightValue=maxValue;
+        rightValue = maxValue;
         percent = maxValue * 1.0f / (RangeSeekBar.this.getWidth() - rightView.getWidth() - RangeSeekBar.this.leftView.getWidth());
     }
 
@@ -152,29 +157,25 @@ public class RangeSeekBar extends ConstraintLayout {
 
             }
         });
-        ConstraintLayout constraintLayout = (ConstraintLayout) LayoutInflater.from(context).inflate(R.layout.view_range_seek_bar, this, true);
-        leftView = constraintLayout.findViewById(R.id.left);
-        rightView = constraintLayout.findViewById(R.id.right);
-        progressView = constraintLayout.findViewById(R.id.progress);
-        int leftId = leftView.getId();
-        int rightId = rightView.getId();
-        int cardId = constraintLayout.findViewById(R.id.card_view).getId();
-        mSet = new ConstraintSet();
-        mSet.clone(constraintLayout);
-        mSet.connect(leftId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        mSet.connect(leftId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(leftId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-
-        mSet.connect(cardId, ConstraintSet.START, leftId, ConstraintSet.END);
-        mSet.connect(cardId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(cardId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        mSet.connect(cardId, ConstraintSet.END, rightId, ConstraintSet.START);
-        mSet.constrainWidth(cardId, ConstraintSet.MATCH_CONSTRAINT);
-
-        mSet.connect(rightId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(rightId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        mSet.connect(rightId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        mSet.applyTo(constraintLayout);
+//        int leftId = leftView.getId();
+//        int rightId = rightView.getId();
+//        int cardId = constraintLayout.findViewById(R.id.card_view).getId();
+//        mSet = new ConstraintSet();
+//        mSet.clone(constraintLayout);
+//        mSet.connect(leftId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+//        mSet.connect(leftId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+//        mSet.connect(leftId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+//
+//        mSet.connect(cardId, ConstraintSet.START, leftId, ConstraintSet.END);
+//        mSet.connect(cardId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+//        mSet.connect(cardId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+//        mSet.connect(cardId, ConstraintSet.END, rightId, ConstraintSet.START);
+//        mSet.constrainWidth(cardId, ConstraintSet.MATCH_CONSTRAINT);
+//
+//        mSet.connect(rightId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+//        mSet.connect(rightId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+//        mSet.connect(rightId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
+//        mSet.applyTo(constraintLayout);
     }
 
 
@@ -206,10 +207,24 @@ public class RangeSeekBar extends ConstraintLayout {
     private void setProgressBitmap() {
         if (mBitmap != null && !mBitmap.isRecycled()) {
             int x = (int) (leftValue / percent);
-            int w= (int) ((rightValue - leftValue) / percent);
-            if (w<2)return;
-            progressView.setImageBitmap(Bitmap.createBitmap(mBitmap,x, 0,w, mRect.height()));
+            int w = (int) ((rightValue - leftValue) / percent);
+            if (w < 2) return;
+//            progressView.setImageBitmap(Bitmap.createBitmap(mBitmap,x, 0,w, mRect.height()));
         }
+    }
+
+    public void addLeftView(View view,int widthType,int heightType) {
+        leftView = view;
+        view.setId(View.generateViewId());
+        this.addView(view);
+        ConstraintSet set = new ConstraintSet();
+        set.clone(this);
+        mSet.constrainWidth(view.getId(),widthType);
+        mSet.constrainHeight(view.getId(),heightType);
+        mSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
+        mSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
+        mSet.connect(view.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
+        set.applyTo(this);
     }
 
 }
