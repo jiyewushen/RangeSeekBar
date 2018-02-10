@@ -1,13 +1,12 @@
 package com.cx.librangeseekbar;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.widget.ViewDragHelper;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,19 +14,15 @@ import android.view.View;
  * Created by Chen on 2017/12/31.
  */
 
-public class RangeSeekBar extends ConstraintLayout {
-    private View leftView;
-    private View rightView;
-    private View progressView;
-    private ViewDragHelper mDragHelper;
+public class RangeSeekBar extends BaseView {
     private int maxValue = 100;
     private int leftValue = 0;
     private int rightValue = maxValue;
     private float percent = 0.0f;
     private Rect mRect;
     private Bitmap mBitmap;
+    protected ViewDragHelper mDragHelper;
     private OnSeekBarChangeListener mChangeListener;
-    private ConstraintSet mSet;
 
     public interface OnSeekBarChangeListener {
         void onChanged(int start, int end);
@@ -157,45 +152,19 @@ public class RangeSeekBar extends ConstraintLayout {
 
             }
         });
-//        int leftId = leftView.getId();
-//        int rightId = rightView.getId();
-//        int cardId = constraintLayout.findViewById(R.id.card_view).getId();
-//        mSet = new ConstraintSet();
-//        mSet.clone(constraintLayout);
-//        mSet.connect(leftId, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-//        mSet.connect(leftId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-//        mSet.connect(leftId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-//
-//        mSet.connect(cardId, ConstraintSet.START, leftId, ConstraintSet.END);
-//        mSet.connect(cardId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-//        mSet.connect(cardId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-//        mSet.connect(cardId, ConstraintSet.END, rightId, ConstraintSet.START);
-//        mSet.constrainWidth(cardId, ConstraintSet.MATCH_CONSTRAINT);
-//
-//        mSet.connect(rightId, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-//        mSet.connect(rightId, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-//        mSet.connect(rightId, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-//        mSet.applyTo(constraintLayout);
     }
-
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        final int action = MotionEventCompat.getActionMasked(ev);
-//        if (action == MotionEvent.ACTION_CANCEL || action == MotionEvent.ACTION_UP) {
-//            mDragHelper.cancel();
-//            return false;
-//        }
         return mDragHelper.shouldInterceptTouchEvent(ev);
     }
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         mDragHelper.processTouchEvent(event);
         return true;
     }
-
 
     public void calculateValue() {
         leftValue = (int) (percent * (RangeSeekBar.this.leftView.getRight() - RangeSeekBar.this.leftView.getWidth()));
@@ -213,48 +182,5 @@ public class RangeSeekBar extends ConstraintLayout {
         }
     }
 
-    public void addLeftView(View view,int widthType,int heightType) {
-        leftView = view;
-        view.setId(View.generateViewId());
-        this.addView(view);
-        ConstraintSet set = new ConstraintSet();
-        set.clone(this);
-        mSet.constrainWidth(view.getId(),widthType);
-        mSet.constrainHeight(view.getId(),heightType);
-        mSet.connect(view.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-        mSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(view.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        set.applyTo(this);
-    }
-    public void addRightView(View view,int widthType,int heightType) {
-        rightView = view;
-        view.setId(View.generateViewId());
-        this.addView(view);
-        ConstraintSet set = new ConstraintSet();
-        set.clone(this);
-        mSet.constrainWidth(view.getId(),widthType);
-        mSet.constrainHeight(view.getId(),heightType);
-        mSet.connect(view.getId(), ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(view.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        mSet.connect(view.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-        set.applyTo(this);
-    }
-    public void addProgressView(View view,int widthType) {
-        addProgressView(view,widthType,ConstraintSet.MATCH_CONSTRAINT);
-    }
-    public void addProgressView(View view,int widthType,int heightType) {
-        progressView = view;
-        view.setId(View.generateViewId());
-        this.addView(view);
-        ConstraintSet set = new ConstraintSet();
-        int id=view.getId();
-        set.clone(this);
-        mSet.constrainWidth(id,widthType);
-        mSet.constrainHeight(id,heightType);
-        mSet.connect(id, ConstraintSet.START, leftView.getId(), ConstraintSet.END);
-        mSet.connect(id, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-        mSet.connect(id, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-        mSet.connect(id, ConstraintSet.END, rightView.getId(), ConstraintSet.START);
-        set.applyTo(this);
-    }
+
 }
